@@ -155,5 +155,11 @@
     <string name="pref_group_title_face_mesh" translatable="false">Face Mesh Detection</string>
     <string name="pref_title_face_mesh_use_case" translatable="false">Use Case</string>
     <string name="pref_key_face_mesh_use_case" translatable="false">face_mesh_use_case</string>
+    <string name="pref_key_connect_ip" translatable="false">connect_ip</string>
+    <string name="pref_key_connect_port" translatable="false">connect_port</string>
+    <string name="default_ip">192.168.178.50</string>
+    <string name="default_port">54321</string>
+    <string name="ip_to_send_data_to">IP to send data to</string>
+    <string name="port_to_send_data_to">Port to send data to</string>
 
 </resources>

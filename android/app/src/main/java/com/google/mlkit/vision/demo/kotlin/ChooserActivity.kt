@@ -28,11 +28,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.mlkit.vision.demo.R
+import com.google.mlkit.vision.demo.preference.PreferenceUtils
 
 /** Demo app chooser which allows you pick from all available testing Activities. */
 class ChooserActivity :
@@ -52,6 +54,15 @@ class ChooserActivity :
 
     override fun onItemClick(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
         val clicked = CLASSES[position]
+        val ip = findViewById<EditText>(R.id.ip).text.toString()
+        PreferenceUtils.setIp(this, ip)
+        try {
+            val port = Integer.parseInt(findViewById<EditText>(R.id.port).text.toString())
+            PreferenceUtils.setPort(this, port)
+        }
+        catch (ex: NumberFormatException) {
+            PreferenceUtils.setPort(this, 54321)
+        }
         startActivity(Intent(this, clicked))
     }
 

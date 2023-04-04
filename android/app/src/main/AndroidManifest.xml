@@ -35,7 +35,7 @@
             android:value="barcode,face,ocr,ica,custom_ica" />
 
         <activity
-            android:name=".EntryChoiceActivity"
+            android:name=".kotlin.ChooserActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -43,24 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".java.ChooserActivity"
-            android:exported="false"></activity>
-
-        <activity
-            android:name=".java.LivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme"></activity>
-
-        <activity
-            android:name=".java.CameraXLivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme"></activity>
-
-        <activity
-            android:name=".kotlin.ChooserActivity"
-            android:exported="false"></activity>
 
         <activity
             android:name=".kotlin.LivePreviewActivity"

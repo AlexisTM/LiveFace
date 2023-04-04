@@ -284,4 +284,28 @@ public class PreferenceUtils {
         return Integer.parseInt(
                 sharedPreferences.getString(prefKey, String.valueOf(FaceMeshDetectorOptions.FACE_MESH)));
     }
+
+    public static int getPort(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefKey = context.getString(R.string.pref_key_connect_port);
+        return sharedPreferences.getInt(prefKey, Integer.parseInt(context.getString(R.string.default_port)));
+    }
+
+    public static void setPort(Context context, int value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefKey = context.getString(R.string.pref_key_connect_port);
+        sharedPreferences.edit().putInt(prefKey, value).apply();
+    }
+
+    public static String getIp(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefKey = context.getString(R.string.pref_key_connect_ip);
+        return sharedPreferences.getString(prefKey, context.getString(R.string.default_ip));
+    }
+
+    public static void setIp(Context context, String value) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefKey = context.getString(R.string.pref_key_connect_ip);
+        sharedPreferences.edit().putString(prefKey, value).apply();
+    }
 }

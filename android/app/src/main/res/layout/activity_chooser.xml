@@ -17,6 +17,29 @@
         android:contentDescription="@string/app_name"
         app:srcCompat="@drawable/logo_mlkit" />
 
+      <EditText
+        android:id="@+id/ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/ip_to_send_data_to"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:selectAllOnFocus="true"
+        android:text="@string/default_ip"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/port_to_send_data_to"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:text="@string/default_port"
+        android:textAlignment="center" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
