@@ -43,135 +43,135 @@ import java.util.List;
  * view.
  */
 public class FaceMeshGraphic extends Graphic {
-  private static final int USE_CASE_CONTOUR_ONLY = 999;
+    private static final int USE_CASE_CONTOUR_ONLY = 999;
 
-  private static final float FACE_POSITION_RADIUS = 8.0f;
-  private static final float BOX_STROKE_WIDTH = 5.0f;
+    private static final float FACE_POSITION_RADIUS = 8.0f;
+    private static final float BOX_STROKE_WIDTH = 5.0f;
+    @ContourType
+    private static final int[] DISPLAY_CONTOURS = {
+            FaceMesh.FACE_OVAL,
+            FaceMesh.LEFT_EYEBROW_TOP,
+            FaceMesh.LEFT_EYEBROW_BOTTOM,
+            FaceMesh.RIGHT_EYEBROW_TOP,
+            FaceMesh.RIGHT_EYEBROW_BOTTOM,
+            FaceMesh.LEFT_EYE,
+            FaceMesh.RIGHT_EYE,
+            FaceMesh.UPPER_LIP_TOP,
+            FaceMesh.UPPER_LIP_BOTTOM,
+            FaceMesh.LOWER_LIP_TOP,
+            FaceMesh.LOWER_LIP_BOTTOM,
+            FaceMesh.NOSE_BRIDGE
+    };
+    private final Paint positionPaint;
+    private final Paint boxPaint;
+    private final FaceMesh faceMesh;
+    private final int useCase;
+    private float zMin;
+    private float zMax;
 
-  private final Paint positionPaint;
-  private final Paint boxPaint;
-  private final FaceMesh faceMesh;
-  private final int useCase;
-  private float zMin;
-  private float zMax;
+    FaceMeshGraphic(GraphicOverlay overlay, FaceMesh faceMesh) {
+        super(overlay);
 
-  @ContourType
-  private static final int[] DISPLAY_CONTOURS = {
-    FaceMesh.FACE_OVAL,
-    FaceMesh.LEFT_EYEBROW_TOP,
-    FaceMesh.LEFT_EYEBROW_BOTTOM,
-    FaceMesh.RIGHT_EYEBROW_TOP,
-    FaceMesh.RIGHT_EYEBROW_BOTTOM,
-    FaceMesh.LEFT_EYE,
-    FaceMesh.RIGHT_EYE,
-    FaceMesh.UPPER_LIP_TOP,
-    FaceMesh.UPPER_LIP_BOTTOM,
-    FaceMesh.LOWER_LIP_TOP,
-    FaceMesh.LOWER_LIP_BOTTOM,
-    FaceMesh.NOSE_BRIDGE
-  };
+        this.faceMesh = faceMesh;
+        final int selectedColor = Color.WHITE;
 
-  FaceMeshGraphic(GraphicOverlay overlay, FaceMesh faceMesh) {
-    super(overlay);
+        positionPaint = new Paint();
+        positionPaint.setColor(selectedColor);
 
-    this.faceMesh = faceMesh;
-    final int selectedColor = Color.WHITE;
+        boxPaint = new Paint();
+        boxPaint.setColor(selectedColor);
+        boxPaint.setStyle(Style.STROKE);
+        boxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
 
-    positionPaint = new Paint();
-    positionPaint.setColor(selectedColor);
-
-    boxPaint = new Paint();
-    boxPaint.setColor(selectedColor);
-    boxPaint.setStyle(Style.STROKE);
-    boxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
-
-    useCase = PreferenceUtils.getFaceMeshUseCase(getApplicationContext());
-  }
-
-  /** Draws the face annotations for position on the supplied canvas. */
-  @Override
-  public void draw(Canvas canvas) {
-    if (faceMesh == null) {
-      return;
+        useCase = PreferenceUtils.getFaceMeshUseCase(getApplicationContext());
     }
 
-    // Draws the bounding box.
-    RectF rect = new RectF(faceMesh.getBoundingBox());
-    // If the image is flipped, the left will be translated to right, and the right to left.
-    float x0 = translateX(rect.left);
-    float x1 = translateX(rect.right);
-    rect.left = min(x0, x1);
-    rect.right = max(x0, x1);
-    rect.top = translateY(rect.top);
-    rect.bottom = translateY(rect.bottom);
-    canvas.drawRect(rect, boxPaint);
+    /**
+     * Draws the face annotations for position on the supplied canvas.
+     */
+    @Override
+    public void draw(Canvas canvas) {
+        if (faceMesh == null) {
+            return;
+        }
 
-    // Draw face mesh
-    List<FaceMeshPoint> points =
-        useCase == USE_CASE_CONTOUR_ONLY ? getContourPoints(faceMesh) : faceMesh.getAllPoints();
-    List<Triangle<FaceMeshPoint>> triangles = faceMesh.getAllTriangles();
+        // Draws the bounding box.
+        RectF rect = new RectF(faceMesh.getBoundingBox());
+        // If the image is flipped, the left will be translated to right, and the right to left.
+        float x0 = translateX(rect.left);
+        float x1 = translateX(rect.right);
+        rect.left = min(x0, x1);
+        rect.right = max(x0, x1);
+        rect.top = translateY(rect.top);
+        rect.bottom = translateY(rect.bottom);
+        canvas.drawRect(rect, boxPaint);
 
-    zMin = Float.MAX_VALUE;
-    zMax = Float.MIN_VALUE;
-    for (FaceMeshPoint point : points) {
-      zMin = min(zMin, point.getPosition().getZ());
-      zMax = max(zMax, point.getPosition().getZ());
+        // Draw face mesh
+        List<FaceMeshPoint> points =
+                useCase == USE_CASE_CONTOUR_ONLY ? getContourPoints(faceMesh) : faceMesh.getAllPoints();
+        List<Triangle<FaceMeshPoint>> triangles = faceMesh.getAllTriangles();
+
+        zMin = Float.MAX_VALUE;
+        zMax = Float.MIN_VALUE;
+        for (FaceMeshPoint point : points) {
+            zMin = min(zMin, point.getPosition().getZ());
+            zMax = max(zMax, point.getPosition().getZ());
+        }
+
+        // Draw face mesh points
+        for (FaceMeshPoint point : points) {
+            updatePaintColorByZValue(
+                    positionPaint,
+                    canvas,
+                    /* visualizeZ= */ true,
+                    /* rescaleZForVisualization= */ true,
+                    point.getPosition().getZ(),
+                    zMin,
+                    zMax);
+            canvas.drawCircle(
+                    translateX(point.getPosition().getX()),
+                    translateY(point.getPosition().getY()),
+                    FACE_POSITION_RADIUS,
+                    positionPaint);
+        }
+
+        if (useCase == FaceMeshDetectorOptions.FACE_MESH) {
+            // Draw face mesh triangles
+            for (Triangle<FaceMeshPoint> triangle : triangles) {
+                List<FaceMeshPoint> faceMeshPoints = triangle.getAllPoints();
+                PointF3D point1 = faceMeshPoints.get(0).getPosition();
+                PointF3D point2 = faceMeshPoints.get(1).getPosition();
+                PointF3D point3 = faceMeshPoints.get(2).getPosition();
+
+                drawLine(canvas, point1, point2);
+                drawLine(canvas, point2, point3);
+                drawLine(canvas, point3, point1);
+            }
+        }
     }
 
-    // Draw face mesh points
-    for (FaceMeshPoint point : points) {
-      updatePaintColorByZValue(
-          positionPaint,
-          canvas,
-          /* visualizeZ= */ true,
-          /* rescaleZForVisualization= */ true,
-          point.getPosition().getZ(),
-          zMin,
-          zMax);
-      canvas.drawCircle(
-          translateX(point.getPosition().getX()),
-          translateY(point.getPosition().getY()),
-          FACE_POSITION_RADIUS,
-          positionPaint);
+    private List<FaceMeshPoint> getContourPoints(FaceMesh faceMesh) {
+        List<FaceMeshPoint> contourPoints = new ArrayList<>();
+        for (int type : DISPLAY_CONTOURS) {
+            contourPoints.addAll(faceMesh.getPoints(type));
+        }
+        return contourPoints;
     }
 
-    if (useCase == FaceMeshDetectorOptions.FACE_MESH) {
-      // Draw face mesh triangles
-      for (Triangle<FaceMeshPoint> triangle : triangles) {
-        List<FaceMeshPoint> faceMeshPoints = triangle.getAllPoints();
-        PointF3D point1 = faceMeshPoints.get(0).getPosition();
-        PointF3D point2 = faceMeshPoints.get(1).getPosition();
-        PointF3D point3 = faceMeshPoints.get(2).getPosition();
-
-        drawLine(canvas, point1, point2);
-        drawLine(canvas, point2, point3);
-        drawLine(canvas, point3, point1);
-      }
+    private void drawLine(Canvas canvas, PointF3D point1, PointF3D point2) {
+        updatePaintColorByZValue(
+                positionPaint,
+                canvas,
+                /* visualizeZ= */ true,
+                /* rescaleZForVisualization= */ true,
+                (point1.getZ() + point2.getZ()) / 2,
+                zMin,
+                zMax);
+        canvas.drawLine(
+                translateX(point1.getX()),
+                translateY(point1.getY()),
+                translateX(point2.getX()),
+                translateY(point2.getY()),
+                positionPaint);
     }
-  }
-
-  private List<FaceMeshPoint> getContourPoints(FaceMesh faceMesh) {
-    List<FaceMeshPoint> contourPoints = new ArrayList<>();
-    for (int type : DISPLAY_CONTOURS) {
-      contourPoints.addAll(faceMesh.getPoints(type));
-    }
-    return contourPoints;
-  }
-
-  private void drawLine(Canvas canvas, PointF3D point1, PointF3D point2) {
-    updatePaintColorByZValue(
-        positionPaint,
-        canvas,
-        /* visualizeZ= */ true,
-        /* rescaleZForVisualization= */ true,
-        (point1.getZ() + point2.getZ()) / 2,
-        zMin,
-        zMax);
-    canvas.drawLine(
-        translateX(point1.getX()),
-        translateY(point1.getY()),
-        translateX(point2.getX()),
-        translateY(point2.getY()),
-        positionPaint);
-  }
 }
