@@ -57,7 +57,7 @@ class CameraXLivePreviewActivity :
     private var analysisUseCase: ImageAnalysis? = null
     private var imageProcessor: VisionImageProcessor? = null
     private var needUpdateGraphicOverlayImageSourceInfo = false
-    private var selectedModel = OBJECT_DETECTION
+    private var selectedModel = FACE_DETECTION
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var cameraSelector: CameraSelector? = null
 
@@ -65,7 +65,7 @@ class CameraXLivePreviewActivity :
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
         if (savedInstanceState != null) {
-            selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, OBJECT_DETECTION)
+            selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, FACE_DETECTION)
         }
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         setContentView(R.layout.activity_vision_camerax_live_preview)
@@ -309,21 +309,8 @@ class CameraXLivePreviewActivity :
 
     companion object {
         private const val TAG = "CameraXLivePreview"
-        private const val OBJECT_DETECTION = "Object Detection"
-        private const val OBJECT_DETECTION_CUSTOM = "Custom Object Detection"
-        private const val CUSTOM_AUTOML_OBJECT_DETECTION = "Custom AutoML Object Detection (Flower)"
         private const val FACE_DETECTION = "Face Detection"
-        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin"
-        private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese (Beta)"
-        private const val TEXT_RECOGNITION_DEVANAGARI = "Text Recognition Devanagari (Beta)"
-        private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese (Beta)"
-        private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean (Beta)"
-        private const val BARCODE_SCANNING = "Barcode Scanning"
-        private const val IMAGE_LABELING = "Image Labeling"
-        private const val IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)"
-        private const val CUSTOM_AUTOML_LABELING = "Custom AutoML Image Labeling (Flower)"
         private const val POSE_DETECTION = "Pose Detection"
-        private const val SELFIE_SEGMENTATION = "Selfie Segmentation"
         private const val FACE_MESH_DETECTION = "Face Mesh Detection (Beta)"
 
         private const val STATE_SELECTED_MODEL = "selected_model"

@@ -44,7 +44,7 @@ class LivePreviewActivity :
     private var cameraSource: CameraSource? = null
     private var preview: CameraSourcePreview? = null
     private var graphicOverlay: GraphicOverlay? = null
-    private var selectedModel = OBJECT_DETECTION
+    private var selectedModel = FACE_DETECTION
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -213,18 +213,8 @@ class LivePreviewActivity :
     }
 
     companion object {
-        private const val OBJECT_DETECTION = "Object Detection"
         private const val FACE_DETECTION = "Face Detection"
-        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin"
-        private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese (Beta)"
-        private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese (Beta)"
-        private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean (Beta)"
-        private const val BARCODE_SCANNING = "Barcode Scanning"
-        private const val IMAGE_LABELING = "Image Labeling"
-        private const val IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)"
-        private const val CUSTOM_AUTOML_LABELING = "Custom AutoML Image Labeling (Flower)"
         private const val POSE_DETECTION = "Pose Detection"
-        private const val SELFIE_SEGMENTATION = "Selfie Segmentation"
         private const val FACE_MESH_DETECTION = "Face Mesh Detection (Beta)"
 
         private const val TAG = "LivePreviewActivity"
