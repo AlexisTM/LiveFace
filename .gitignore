@@ -24,5 +24,6 @@ hs_err_pid*
 
 # build folders shouldn't ever be pushed ;)
 build
+release
 .gradle
 local.properties

@@ -60,7 +60,7 @@ public class FaceGraphic extends Graphic {
   private final Paint[] boxPaints;
   private final Paint[] labelPaints;
 
-  private volatile Face face;
+  private final Face face;
 
   FaceGraphic(GraphicOverlay overlay, Face face) {
     super(overlay);

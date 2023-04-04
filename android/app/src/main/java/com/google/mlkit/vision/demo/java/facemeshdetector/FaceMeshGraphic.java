@@ -50,7 +50,7 @@ public class FaceMeshGraphic extends Graphic {
 
   private final Paint positionPaint;
   private final Paint boxPaint;
-  private volatile FaceMesh faceMesh;
+  private final FaceMesh faceMesh;
   private final int useCase;
   private float zMin;
   private float zMax;

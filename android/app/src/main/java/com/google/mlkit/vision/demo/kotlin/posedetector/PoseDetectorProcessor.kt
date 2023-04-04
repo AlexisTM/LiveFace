@@ -66,7 +66,7 @@ class PoseDetectorProcessor(
       .continueWith(
         classificationExecutor,
         { task ->
-          val pose = task.getResult()
+          val pose = task.result
           var classificationResult: List<String> = ArrayList()
           if (runClassification) {
             if (poseClassifierProcessor == null) {
@@ -85,7 +85,7 @@ class PoseDetectorProcessor(
       .continueWith(
         classificationExecutor,
         { task ->
-          val pose = task.getResult()
+          val pose = task.result
           var classificationResult: List<String> = ArrayList()
           if (runClassification) {
             if (poseClassifierProcessor == null) {

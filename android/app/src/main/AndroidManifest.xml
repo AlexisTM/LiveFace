@@ -81,18 +81,6 @@
         </activity>
 
         <activity
-            android:name=".kotlin.CameraXSourceDemoActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-        </activity>
-
-        <activity
-            android:name=".kotlin.StillImageActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-        </activity>
-
-        <activity
             android:name=".preference.SettingsActivity"
             android:exported="false"/>
 
