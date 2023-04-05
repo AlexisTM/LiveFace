@@ -20,12 +20,15 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.demo.GraphicOverlay
+import com.google.mlkit.vision.demo.kotlin.DatagramServer
 import com.google.mlkit.vision.demo.kotlin.VisionProcessorBase
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
 import com.google.mlkit.vision.facemesh.FaceMesh
 import com.google.mlkit.vision.facemesh.FaceMeshDetection
 import com.google.mlkit.vision.facemesh.FaceMeshDetector
 import com.google.mlkit.vision.facemesh.FaceMeshDetectorOptions
+import org.json.JSONArray
+import org.json.JSONObject
 
 /** Face Mesh Detector Demo. */
 class FaceMeshDetectorProcessor(context: Context) :
@@ -51,9 +54,48 @@ class FaceMeshDetectorProcessor(context: Context) :
     }
 
     override fun onSuccess(faces: List<FaceMesh>, graphicOverlay: GraphicOverlay) {
+        val json = JSONObject()
         for (face in faces) {
+            val faceJson = JSONObject()
+
+            val pointsJson = JSONArray()
+            for (point in face.allPoints) {
+                val pointJson = JSONObject()
+                pointJson.put("x", point.position.x);
+                pointJson.put("y", point.position.y);
+                pointJson.put("z", point.position.z);
+                pointsJson.put(pointJson)
+            }
+            faceJson.put("points", pointsJson)
+
+            /*
+            val triangleJson = JSONArray()
+            for(triangle in face.allTriangles) {
+                val trianglePointsJson = JSONArray()
+                for (point in triangle.allPoints) {
+                    val pointJson = JSONObject()
+                    pointJson.put("x", point.position.x);
+                    pointJson.put("y", point.position.y);
+                    pointJson.put("z", point.position.z);
+                    trianglePointsJson.put(pointJson)
+                }
+                triangleJson.put(trianglePointsJson)
+            }
+            faceJson.put("triangles", triangleJson);
+             */
+
+            val boundingBoxJson = JSONObject()
+            boundingBoxJson.put("bottom", face.boundingBox.bottom)
+            boundingBoxJson.put("top", face.boundingBox.top)
+            boundingBoxJson.put("left", face.boundingBox.left)
+            boundingBoxJson.put("right", face.boundingBox.right)
+            faceJson.put("bounding_box", boundingBoxJson)
+
+            json.put("faces", faceJson)
+
             graphicOverlay.add(FaceMeshGraphic(graphicOverlay, face))
         }
+        DatagramServer.send(graphicOverlay.context, json);
     }
 
     override fun onFailure(e: Exception) {

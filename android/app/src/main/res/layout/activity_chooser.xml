@@ -17,7 +17,7 @@
         android:contentDescription="@string/app_name"
         app:srcCompat="@drawable/logo_mlkit" />
 
-      <EditText
+    <EditText
         android:id="@+id/ip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

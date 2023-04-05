@@ -21,8 +21,11 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.demo.GraphicOverlay
+import com.google.mlkit.vision.demo.kotlin.DatagramServer
 import com.google.mlkit.vision.demo.kotlin.VisionProcessorBase
 import com.google.mlkit.vision.face.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
 
 /** Face Detector Demo.  */
@@ -53,6 +56,64 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
     }
 
     override fun onSuccess(faces: List<Face>, graphicOverlay: GraphicOverlay) {
+        val json = JSONObject();
+        val facesJson = JSONArray();
+        for (face in faces) {
+            val faceJson = JSONObject();
+            val boundingBoxJson = JSONObject()
+            boundingBoxJson.put("bottom", face.boundingBox.bottom)
+            boundingBoxJson.put("top", face.boundingBox.top)
+            boundingBoxJson.put("left", face.boundingBox.left)
+            boundingBoxJson.put("right", face.boundingBox.right)
+            faceJson.put("bounding_box", boundingBoxJson)
+
+            val eulerJson = JSONObject()
+            eulerJson.put("x", face.headEulerAngleX)
+            eulerJson.put("y", face.headEulerAngleY)
+            eulerJson.put("z", face.headEulerAngleZ)
+            faceJson.put("euler", eulerJson)
+
+            faceJson.put("id", face.trackingId)
+            faceJson.put("smiling", face.smilingProbability)
+            faceJson.put("left_eye_open", face.leftEyeOpenProbability)
+            faceJson.put("right_eye_open", face.rightEyeOpenProbability)
+
+            val contoursJson = JSONObject()
+
+            for (contourType in contourTypes.indices) {
+                val pointsJson = JSONArray()
+                val contour = face.getContour(contourTypes[contourType])
+                if (contour != null) {
+                    for (point in contour.points) {
+                        val pointJson = JSONObject()
+                        pointJson.put("x", point.x);
+                        pointJson.put("y", point.y);
+                        pointsJson.put(pointJson)
+                    }
+                }
+                contoursJson.put(contourTypesStrings[contourType], pointsJson)
+            }
+            faceJson.put("contours", contoursJson)
+
+            val landmarksJson = JSONObject()
+            for (landmarkType in landMarkTypes.indices) {
+                val landmark = face.getLandmark(landmarkType)
+                if (landmark != null) {
+                    val landmarkJson = JSONObject()
+                    landmarkJson.put("x", landmark.position.x)
+                    landmarkJson.put("y", landmark.position.y)
+                    landmarksJson.put(landMarkTypesStrings[landmarkType], landmarkJson)
+                } else {
+                    landmarksJson.put(landMarkTypesStrings[landmarkType], null)
+                }
+            }
+            faceJson.put("landmarks", landmarksJson)
+
+            facesJson.put(faceJson)
+        }
+        json.put("faces", facesJson)
+        DatagramServer.send(graphicOverlay.context, json);
+
         for (face in faces) {
             graphicOverlay.add(FaceGraphic(graphicOverlay, face))
             logExtrasForTesting(face)
@@ -65,6 +126,69 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
 
     companion object {
         private const val TAG = "FaceDetectorProcessor"
+
+        private val landMarkTypes = intArrayOf(
+            FaceLandmark.MOUTH_BOTTOM,
+            FaceLandmark.MOUTH_RIGHT,
+            FaceLandmark.MOUTH_LEFT,
+            FaceLandmark.RIGHT_EYE,
+            FaceLandmark.LEFT_EYE,
+            FaceLandmark.RIGHT_EAR,
+            FaceLandmark.LEFT_EAR,
+            FaceLandmark.RIGHT_CHEEK,
+            FaceLandmark.LEFT_CHEEK,
+            FaceLandmark.NOSE_BASE
+        )
+
+        private val landMarkTypesStrings = arrayOf(
+            "mouth_bottom",
+            "mouth_right",
+            "mouth_left",
+            "right_eye",
+            "left_eye",
+            "right_ear",
+            "left_ear",
+            "right_cheek",
+            "left_cheek",
+            "nose_base"
+        )
+
+        private val contourTypes = intArrayOf(
+            FaceContour.FACE,
+            FaceContour.LEFT_EYEBROW_TOP,
+            FaceContour.LEFT_EYEBROW_BOTTOM,
+            FaceContour.RIGHT_EYEBROW_TOP,
+            FaceContour.RIGHT_EYEBROW_BOTTOM,
+            FaceContour.LEFT_EYE,
+            FaceContour.RIGHT_EYE,
+            FaceContour.UPPER_LIP_TOP,
+            FaceContour.UPPER_LIP_BOTTOM,
+            FaceContour.LOWER_LIP_TOP,
+            FaceContour.LOWER_LIP_BOTTOM,
+            FaceContour.NOSE_BRIDGE,
+            FaceContour.NOSE_BOTTOM,
+            FaceContour.LEFT_CHEEK,
+            FaceContour.RIGHT_CHEEK,
+        )
+
+        private val contourTypesStrings = arrayOf(
+            "face",
+            "left_eyebrow_top",
+            "left_eyebrow_bottom",
+            "right_eyebrow_top",
+            "right_eyebrow_bottom",
+            "left_eye",
+            "right_eye",
+            "upper_lip_top",
+            "upper_lip_bottom",
+            "lower_lip_top",
+            "lower_lip_bottom",
+            "nose_bridge",
+            "nose_bottom",
+            "left_cheek",
+            "right_cheek",
+        )
+
         private fun logExtrasForTesting(face: Face?) {
             if (face != null) {
                 Log.v(
@@ -84,30 +208,6 @@ class FaceDetectorProcessor(context: Context, detectorOptions: FaceDetectorOptio
                     "face Euler Angle Z: " + face.headEulerAngleZ
                 )
                 // All landmarks
-                val landMarkTypes = intArrayOf(
-                    FaceLandmark.MOUTH_BOTTOM,
-                    FaceLandmark.MOUTH_RIGHT,
-                    FaceLandmark.MOUTH_LEFT,
-                    FaceLandmark.RIGHT_EYE,
-                    FaceLandmark.LEFT_EYE,
-                    FaceLandmark.RIGHT_EAR,
-                    FaceLandmark.LEFT_EAR,
-                    FaceLandmark.RIGHT_CHEEK,
-                    FaceLandmark.LEFT_CHEEK,
-                    FaceLandmark.NOSE_BASE
-                )
-                val landMarkTypesStrings = arrayOf(
-                    "MOUTH_BOTTOM",
-                    "MOUTH_RIGHT",
-                    "MOUTH_LEFT",
-                    "RIGHT_EYE",
-                    "LEFT_EYE",
-                    "RIGHT_EAR",
-                    "LEFT_EAR",
-                    "RIGHT_CHEEK",
-                    "LEFT_CHEEK",
-                    "NOSE_BASE"
-                )
                 for (i in landMarkTypes.indices) {
                     val landmark = face.getLandmark(landMarkTypes[i])
                     if (landmark == null) {

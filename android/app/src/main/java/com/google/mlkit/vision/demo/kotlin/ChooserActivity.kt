@@ -25,12 +25,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.mlkit.vision.demo.R
@@ -59,8 +55,7 @@ class ChooserActivity :
         try {
             val port = Integer.parseInt(findViewById<EditText>(R.id.port).text.toString())
             PreferenceUtils.setPort(this, port)
-        }
-        catch (ex: NumberFormatException) {
+        } catch (ex: NumberFormatException) {
             PreferenceUtils.setPort(this, 54321)
         }
         startActivity(Intent(this, clicked))

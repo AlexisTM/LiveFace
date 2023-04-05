@@ -114,8 +114,10 @@ dependencies {
 
     // On Device Machine Learnings
     implementation "com.google.android.odml:image:1.0.0-beta1"
-}
 
+    // Communication
+    // implementation 'org.capnproto:runtime:0.1.15'
+}
 configurations {
     // Resolves dependency conflict caused by some dependencies use
     // com.google.guava:guava and com.google.guava:listenablefuture together.
