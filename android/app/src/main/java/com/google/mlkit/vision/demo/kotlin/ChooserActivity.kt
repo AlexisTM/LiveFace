@@ -93,25 +93,9 @@ class ChooserActivity :
 
     companion object {
         private const val TAG = "ChooserActivity"
-        private val CLASSES =
-            if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP)
-                arrayOf<Class<*>>(
+        private val CLASSES = arrayOf<Class<*>>(
                     LivePreviewActivity::class.java,
                 )
-            else
-                arrayOf<Class<*>>(
-                    LivePreviewActivity::class.java,
-                    CameraXLivePreviewActivity::class.java,
-                )
-        private val DESCRIPTION_IDS =
-            if (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP)
-                intArrayOf(
-                    R.string.desc_camera_source_activity,
-                )
-            else
-                intArrayOf(
-                    R.string.desc_camera_source_activity,
-                    R.string.desc_camerax_live_preview_activity,
-                )
+        private val DESCRIPTION_IDS = intArrayOf(R.string.desc_camera_source_activity)
     }
 }
