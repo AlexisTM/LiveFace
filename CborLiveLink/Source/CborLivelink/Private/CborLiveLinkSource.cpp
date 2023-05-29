@@ -157,6 +157,19 @@ void FCborLivelinkSource::HandleReceivedData(TSharedPtr<TArray<uint8>, ESPMode::
 	auto socket_data = std::vector<uint8_t>(ReceivedData.Get()->GetData(), ReceivedData.Get()->GetData() + ReceivedData->Num());
 	auto data_input = json::from_cbor(socket_data);
 	// auto data_input = json();
+
+	if (!data_input.contains("name")) {
+		UE_LOG(LogTemp, Warning, TEXT("Missing the name in the data CborLivelink data"));
+		return;
+	}
+	if (!data_input.contains("blendshapes")) {
+		UE_LOG(LogTemp, Warning, TEXT("Missing the blendshapes in the data CborLivelink data"));
+		return;
+	}
+	if (!data_input.contains("transform")) {
+		UE_LOG(LogTemp, Warning, TEXT("Missing the transform in the data CborLivelink data"));
+		return;
+	}
 	std::string name = data_input.at("name");
 	std::unordered_map<std::string, float> blendshapes = data_input.at("blendshapes");
 	std::vector<float> transform = data_input.at("transform");

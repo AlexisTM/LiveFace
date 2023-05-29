@@ -41,6 +41,7 @@
         Threshold</string>
     <string name="label_face_presence_confidence_threshold">Presence
         Threshold</string>
+    <string name="label_ip">Target ip</string>
     <string name="label_num_faces">Number of Faces</string>
     <string name="label_delegate">Delegate</string>
 

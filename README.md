@@ -10,6 +10,9 @@ This includes:
 - Pose detection (The human poses)
 
 
+How to use:
+https://www.youtube.com/watch?v=lDFLrzZy2R4
+
 Build the UE5 plugin
 ===============
 

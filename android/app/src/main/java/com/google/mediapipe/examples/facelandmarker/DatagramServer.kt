@@ -14,7 +14,7 @@ import kotlinx.serialization.*
 import kotlinx.serialization.cbor.Cbor
 
 @Serializable
-data class Face(val name: String, val blenshapes: Map<String, Float>, val transform: List<Float>)
+data class Face(val name: String, val blendshapes: Map<String, Float>, val transform: List<Float>)
 
 object DatagramServer {
     private val socket: DatagramSocket = DatagramSocket()

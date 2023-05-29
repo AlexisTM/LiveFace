@@ -33,6 +33,7 @@
         android:orientation="vertical">
 
         <!-- Chevron indicating that the bottom sheet is expandable -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -74,6 +75,34 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!-- ML confidence threshold adjustment row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_default_row_margin"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_ip"
+                android:textColor="@color/bottom_sheet_text_color"
+                android:textSize="@dimen/bottom_sheet_text_size" />
+
+            <EditText
+                android:id="@+id/ip_val"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="true"
+                android:ems="10"
+                android:freezesText="false"
+                android:inputType="textPersonName"
+                android:text="192.168.178.50" />
+
+        </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

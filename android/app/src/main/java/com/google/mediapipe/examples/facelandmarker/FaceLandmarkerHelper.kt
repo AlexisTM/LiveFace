@@ -33,6 +33,7 @@ import com.google.mediapipe.tasks.vision.facelandmarker.FaceLandmarker
 import com.google.mediapipe.tasks.vision.facelandmarker.FaceLandmarkerResult
 
 class FaceLandmarkerHelper(
+    var target_ip: String = DEFAULT_TARGET_IP,
     var minFaceDetectionConfidence: Float = DEFAULT_FACE_DETECTION_CONFIDENCE,
     var minFaceTrackingConfidence: Float = DEFAULT_FACE_TRACKING_CONFIDENCE,
     var minFacePresenceConfidence: Float = DEFAULT_FACE_PRESENCE_CONFIDENCE,
@@ -366,6 +367,7 @@ class FaceLandmarkerHelper(
 
         const val DELEGATE_CPU = 0
         const val DELEGATE_GPU = 1
+        const val DEFAULT_TARGET_IP = "192.168.178.50"
         const val DEFAULT_FACE_DETECTION_CONFIDENCE = 0.5F
         const val DEFAULT_FACE_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_FACE_PRESENCE_CONFIDENCE = 0.5F
