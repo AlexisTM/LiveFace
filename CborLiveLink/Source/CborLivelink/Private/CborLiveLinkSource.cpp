@@ -200,6 +200,8 @@ void FCborLivelinkSource::HandleReceivedData(TSharedPtr<TArray<uint8>, ESPMode::
 	int i = 0;
 	for (auto& blenshape : blendshapes) {
 		if (create_subject) {
+			std::string blendshape_name = blenshape.first.c_str();
+			blendshape_name[0] = std::toupper(blendshape_name[0]);
 			StaticData.PropertyNames[0] = FName(blenshape.first.c_str());
 		}
 		FrameData.PropertyValues[0] = blenshape.second;
