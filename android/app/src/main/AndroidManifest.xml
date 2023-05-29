@@ -1,68 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    ~ Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~       http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:installLocation="auto">
-    <!-- CameraX libraries require minSdkVersion 21, while this quickstart app
-    supports low to 19. Needs to use overrideLibrary to make the merger tool
-    ignore this conflict and import the libraries while keeping the app's lower
-    minSdkVersion value. In code, will check SDK version, before calling CameraX
-    APIs. -->
-    <uses-sdk tools:overrideLibrary="
-          androidx.camera.camera2, androidx.camera.core,
-          androidx.camera.view, androidx.camera.lifecycle" />
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Enable instant app support -->
+    <dist:module dist:instant="true" />
+
+    <!-- Declare features -->
     <uses-feature android:name="android.hardware.camera" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Declare permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name="androidx.multidex.MultiDexApplication"
-        android:icon="@drawable/logo_mlkit"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat">
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
-        <!-- Optional: Add it to automatically download ML model to device after
-          your app is installed.-->
-        <meta-data
-            android:name="com.google.mlkit.vision.DEPENDENCIES"
-            android:value="barcode,face,ocr,ica,custom_ica" />
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:taskAffinity=""
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup">
 
         <activity
-            android:name=".kotlin.ChooserActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme">
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Declare notch support -->
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
         </activity>
-
-        <activity
-            android:name=".kotlin.LivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme"></activity>
-
-        <activity
-            android:name=".kotlin.CameraXLivePreviewActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme"></activity>
-
-        <activity
-            android:name=".preference.SettingsActivity"
-            android:exported="false" />
-
     </application>
-    <queries>
-        <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE" />
-        </intent>
-    </queries>
 
 </manifest>
